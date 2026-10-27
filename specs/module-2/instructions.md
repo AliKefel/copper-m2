@@ -95,6 +95,7 @@ components/copper/ask-copper.tsx and the tool card. Don't write code yet.
 - **Return `{ progress }` immediately**, then read the stream in the background.
 - **A tool step appears as soon as the model names the tool**, before its input is known. That's what lets the panel say "filling in the details…".
 - **Tools on and tools off are separate chats.** Each sends only its own history.
+- **The starter questions come back after every answer**, not just at the start. A shopper who typed their own question should still see all three waiting underneath the reply, so they can keep going with one click. Only hide them while a reply is streaming.
 - **The tool card is open by default**, before the reply, with "What Copper sent" above "What came back".
 - **No AI key? Show `<SetupRequired service="ai" />`** in the panel instead of the chat. `app/page.tsx` calls `isAiConfigured()` and passes the answer to the panel as a prop; a client component can't read the key.
 - **One page only.** The panel calls a Server Action; don't add an API route or a new page.

@@ -2,7 +2,7 @@
 
 | Criterion | Points | Graded by | Description |
 |---|---|---|---|
-| AC-M2.1 | 5 | auto | The launcher opens the panel, which keeps offering the three starter questions before and after an answer; the header link and /#ask open it too |
+| AC-M2.1 | 5 | auto | The launcher opens the panel, which keeps offering the three starter questions after every answer, typed or clicked; the header link and /#ask open it too |
 | AC-M2.2 | 5 | auto | Without an AI key, the panel shows the setup card |
 | AC-M2.3 | 5 | auto | A question shows Copper's reply; the Use tools switch and the conversation are sent with each question |
 | AC-M2.4 | 5 | auto | Each tool call shows as an open card before the reply (tool, what Copper sent, what came back); tool-less answers are labeled |

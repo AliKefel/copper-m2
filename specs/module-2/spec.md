@@ -154,7 +154,7 @@ Ask Copper is a floating chat panel, not a section of the page. You'll create `c
 | No AI key | The panel shows `<SetupRequired service="ai" />` instead of the chat. The panel is a client component and can't read the key itself, so `app/page.tsx` calls `isAiConfigured()` and passes the answer down as a prop |
 | **Use tools** switch | Give it the accessible name "Use tools" (an `aria-label` is the reliable way) |
 | Asking a question | A text box with an accessible name (for example `aria-label="Your question"`) and a **Send** button. Keep it to one text box, so "the chat box" is unambiguous |
-| Starter questions | Three **starter questions** as buttons, worded exactly as below. Clicking one asks it straight away. An empty chat shows them in full; once an answer has landed they stay on offer under the conversation, so a shopper can keep going without typing. Hide them while an answer is streaming, so nothing moves under the cursor mid-reply |
+| Starter questions | Three **starter questions** as buttons, worded exactly as below. Clicking one asks it straight away. An empty chat shows them in full. **They stay on offer after every answer**, under the conversation — it makes no difference whether the shopper clicked a starter or typed a question of their own, and it stays true on the third answer as much as the first. Hide them only while an answer is streaming, so nothing moves under the cursor mid-reply |
 
 The three starter questions, word for word:
 
@@ -324,7 +324,7 @@ Module 1's brand-colour check keeps passing.
 Each criterion's ID matches its test in `specs/module-2/tests/`. Run `npm run check` to see which pass. Module 1's criteria still run too, so don't break the landing page.
 
 ### Part A: The chat widget
-- **AC-M2.1** A floating **Ask Copper** launcher opens the panel; the panel is a dialog named "Ask Copper"; the three starter questions are offered as buttons and clicking one asks it, both in an empty chat and after an answer has landed (a second click carries the conversation so far); the header links to `#ask`; and loading the site at `/#ask` opens it.
+- **AC-M2.1** A floating **Ask Copper** launcher opens the panel; the panel is a dialog named "Ask Copper"; the three starter questions are offered as buttons and clicking one asks it, in an empty chat and again after every answer — including an answer to a question the shopper typed themselves (a second click carries the conversation so far); the header links to `#ask`; and loading the site at `/#ask` opens it.
 - **AC-M2.2** Without an AI key, the panel shows the setup card, and no chat box.
 - **AC-M2.3** A question shows the question and Copper's reply. **Use tools** is on by default and is sent with each question; a follow-up carries the earlier turns; turning tools off starts a separate chat that sends only its own history; turning it back on restores the first chat.
 - **AC-M2.4** Each tool call shows as a `tool-call` card, open without a click, **before** Copper's reply, with the tool's name, "What Copper sent" and "What came back" (including each line and the total). A tools-off answer shows no tool cards and carries the "Answered without tools" label.
