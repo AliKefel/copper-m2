@@ -27,7 +27,7 @@ The full requirements are in **`specs/module-2/spec.md`**. Read it before you st
 
 ```bash
 cd ~/Developer        # or wherever you keep your projects
-git clone --branch module-2 https://github.com/AliKefel/copper-state-labs-student.git copper-m2
+git clone --branch module-2-part-1 https://github.com/CIS-591/class-examples.git copper-m2
 cd copper-m2
 npm run start-module  # creates github.com/YOUR-USERNAME/copper-m2 (public)
 npm ci

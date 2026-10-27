@@ -228,10 +228,23 @@ describe("Part A: the Ask Copper chat widget", () => {
     expect(askCopper.mock.calls[0][0].messages).toEqual([
       { role: "user", content: STARTERS[1] },
     ]);
-    // ...and they're gone once the conversation has started.
-    await waitFor(() =>
-      expect(chat.queryByRole("button", { name: STARTERS[0] })).toBeNull(),
-    );
+    // ...and they stay on offer once the answer has landed, so a shopper can
+    // keep going without typing.
+    await waitFor(() => expect(chat.getByText("Sure.")).toBeInTheDocument());
+    for (const starter of STARTERS) {
+      expect(
+        chat.getByRole("button", { name: starter }),
+        `starter still offered after an answer: ${starter}`,
+      ).toBeInTheDocument();
+    }
+    // Clicking a second one carries the conversation so far.
+    fireEvent.click(chat.getByRole("button", { name: STARTERS[0] }));
+    await waitFor(() => expect(askCopper).toHaveBeenCalledTimes(2));
+    expect(askCopper.mock.calls[1][0].messages).toHaveLength(3);
+    expect(askCopper.mock.calls[1][0].messages.at(-1)).toEqual({
+      role: "user",
+      content: STARTERS[0],
+    });
     cleanup();
 
     // Opening the site at /#ask opens the panel by itself.

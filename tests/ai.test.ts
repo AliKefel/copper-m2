@@ -46,7 +46,7 @@ function captureLog() {
 }
 
 beforeEach(() => {
-  // An AI Studio key: Vertex keys start with "AQ.".
+  // An AI Studio key, from aistudio.google.com.
   vi.stubEnv("GOOGLE_GENERATIVE_AI_API_KEY", "AIza-test-key");
 });
 afterEach(() => {

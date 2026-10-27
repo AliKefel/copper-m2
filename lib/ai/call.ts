@@ -1,5 +1,4 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createVertex } from "@ai-sdk/google-vertex";
 import { generateText, Output, streamText } from "ai";
 import type { z } from "zod";
 import { defaultModel, MODELS, type ModelId } from "@/lib/ai/models";
@@ -52,10 +51,7 @@ function languageModel(model: ModelId) {
   const entry = MODELS.find((m) => m.id === model);
   const id =
     entry && "googleId" in entry ? entry.googleId : model.slice("google/".length);
-  // Google Cloud (Vertex AI) keys start with "AQ."; AI Studio keys with "AIza".
-  return googleKey.startsWith("AQ.")
-    ? createVertex({ apiKey: googleKey })(id)
-    : createGoogleGenerativeAI({ apiKey: googleKey })(id);
+  return createGoogleGenerativeAI({ apiKey: googleKey })(id);
 }
 
 /** Prints one line per model call, so the cost and time are visible. */
@@ -156,5 +152,4 @@ const THINKING = { includeThoughts: true, thinkingBudget: 1024 };
  */
 export const THOUGHT_SUMMARIES = {
   google: { thinkingConfig: THINKING },
-  vertex: { thinkingConfig: THINKING },
 };
