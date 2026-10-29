@@ -47,7 +47,8 @@ Each is optional until a module needs it. Put them in `.env.local` (never commit
 ## AI coding agents
 
 `CLAUDE.md` / `AGENTS.md` hold the rules for Claude Code and Codex. `.mcp.json`
-gives Claude Code two MCP servers: shadcn and Next.js docs (`next-devtools`).
+gives Claude Code three MCP servers: shadcn, Next.js docs (`next-devtools`)
+and Supabase, which needs authorizing with `/mcp` before it does anything.
 
 **Codex** doesn't read `.mcp.json`. Add the same servers to `~/.codex/config.toml`:
 

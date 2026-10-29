@@ -164,7 +164,7 @@ Is Copper Notes in Night Sky in stock?
 Is Copper Plus cheaper monthly or yearly?
 ```
 
-They're the first three questions in your report, so a shopper's first click is also the thing you'll write about.
+They're the three questions this module is built around, so a shopper's first click is also the thing you try first.
 
 **Two conversations, not one.** Tools on and tools off are separate chats. Flipping the switch swaps which one you see, and each sends only its own history. Otherwise the tools-off model just copies the answer the tools worked out, and the comparison proves nothing.
 
@@ -344,23 +344,10 @@ Each criterion's ID matches its test in `specs/module-2/tests/`. Run `npm run ch
 - **AC-M2.14** With **Use tools** off, the model gets no instructions and no tools; with it on, it gets all four.
 - **AC-M2.15** `COPPER_INSTRUCTIONS` is written (no TODO, at least 40 words) and is sent to the model with the whole conversation.
 
-### REPORT: Tools on vs. off (TA-graded)
-Fill in `specs/module-2/report.md`: ask the five test questions in both chats, read one tool card and one thought summary closely, change a stock level in the stock list and ask again, and explain what you saw.
-
-### DEPLOY
-Your app is live on Vercel and the live page shows "Ask Copper". Add your AI key to the Vercel project so the chat works there too.
-
-## REPORT rubric
-
-Five rows, 0 to 2 points each (10 points).
-
-| | 0 | 1 | 2 |
-|---|---|---|---|
-| **Results table** | Missing | Partly filled | Every row filled from your own runs |
-| **Reading the steps** | Missing | Copies the card | Explains what Copper thought, what it sent and what came back, and whether it picked the right inputs |
-| **Tools off and live stock** | Missing | Says what happened | Explains *why*: the model can't know prices or today's stock without tools |
-| **Risk** | Missing | Names a risk | Names a risk, what the tools do about it, and who at Copper should own it |
-| **Reflection** | Missing | Generic | Specific to what you saw, and names one thing you'd change |
+### DEPLOY, AI-KEY and SUPABASE
+- **DEPLOY** (10) Your app is live on Vercel and the live page shows "Ask Copper".
+- **AI-KEY** (10) That live page shows the chat, not the setup card: the Google key is set in the Vercel project, not only in `.env.local`.
+- **SUPABASE** (10, part 2) `readInventory()` reads the Supabase `inventory` table, `lib/copper/data/inventory.json` is gone, and a migration in `supabase/migrations/` creates the table.
 
 ## Part 2: live stock
 
@@ -411,7 +398,8 @@ Stock does.
 | Part A: the chat widget (AC-M2.1 to AC-M2.4) | 20 | Tests |
 | Part B: the tools (AC-M2.5 to AC-M2.10) | 30 | Tests |
 | Part C: streaming (AC-M2.11 to AC-M2.15) | 25 | Tests (with a fake model and database, so no keys or cost) |
-| REPORT | 10 | A TA, using the REPORT rubric above |
-| DEPLOY | 15 | The grader checks your live site |
+| DEPLOY | 10 | The grader loads your live site |
+| AI-KEY | 10 | The live site shows the chat, not the setup card |
+| SUPABASE | 10 | Stock reads from the Supabase table (part 2) |
 
 `specs/module-2/rubric.md` has the full list.

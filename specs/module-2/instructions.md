@@ -6,15 +6,15 @@ Shoppers on the Copper State Labs site keep asking what things cost and what's i
 
 The panel also shows its work. As the answer arrives, you watch Copper pick a tool, send it numbers, read the result and write the reply. By the end you'll be able to explain exactly what a tool is, and show someone what happens without one.
 
-Your agent writes the code. Your job is to paste each prompt below and run the command that follows it. The one part that's yours is the report in Step 6, written from what you see on screen.
+**Four prompts build the whole thing.** Paste each one into Claude Code and let it finish before you move on. The rest of this page is what *you* do between them, and there isn't much: sign up for two free accounts, paste one key, click Authorize twice, and look at the result in a browser.
 
-The full requirements are in **`specs/module-2/spec.md`**. The prompts point your agent at the parts it needs, so you don't have to memorise it.
+The full requirements are in **`specs/module-2/spec.md`**. The prompts send your agent there, so you don't have to read it.
 
 | | |
 |---|---|
 | **You'll build** | Four tools, Copper's instructions, a streaming Server Action, and the chat panel |
 | **Your repo** | `copper-m2` (public, on your GitHub account; a new repo, separate from `copper-m1`) |
-| **Points** | 75 from tests, plus 10 for your report (a TA) and 15 for the live site |
+| **Points** | 75 from tests, and 30 for the live site, its Google key and the part 2 database |
 | **Submit** | Your repo link, your Vercel link, and a screenshot of `npm run check` (see [What to submit](#what-to-submit)) |
 
 ---
@@ -22,246 +22,174 @@ The full requirements are in **`specs/module-2/spec.md`**. The prompts point you
 ## Before you start
 
 - Module 1 is done: you have a `copper-m1` repo and a live Vercel site.
-- Your tools still work: `node --version` starts with v24, and `gh auth status` says you're logged in.
-- You have a **Google AI Studio API key** ([aistudio.google.com](https://aistudio.google.com) > Get API key). It's free and needs no credit card. You'll need it from Step 5 on; the tests don't need it.
+- `node --version` starts with v24, and `gh auth status` says you're logged in.
+- You have a **Google AI Studio API key** ([aistudio.google.com](https://aistudio.google.com) > Get API key). Free, no credit card.
 
-## Step 1: Get the starter code and make it yours
+## Step 1: Set up
 
-```bash
-cd ~/Developer        # or wherever you keep your projects
-git clone --branch module-2-part-1 https://github.com/CIS-591/class-examples.git copper-m2
-cd copper-m2
-npm run start-module  # creates github.com/YOUR-USERNAME/copper-m2 (public)
-npm ci
-npm run check
-```
-
-The starter is the finished Module 1 landing page, plus three starter files in `lib/copper/assistant/` and the stock list in `lib/copper/data/inventory.json`.
-
-`npm run check` should say **12 of 27**: Module 1's 12 criteria pass and all 15 Module 2 criteria fail. That list is your to-do list. `REPORT` and `DEPLOY` show as "checked later".
-
-## Step 2: Let your agent build the tools
-
-Open your AI agent in the project folder and paste this:
+Open Claude Code in the folder where you keep your projects and paste this:
 
 ```
-Read specs/module-2/spec.md section 1 ("The four tools") and
-lib/copper/assistant/tools.ts, then plan get_products, get_prices,
-calculate_cost and check_availability exactly as the spec describes them.
-Three things the tests check, so get them right: "Copper Home with Copper Plus,
-paid yearly, for 2 years" comes to $149 + 2 x $79 = $307, counting Copper Plus
-once per household and not once per device; Copper Notes in Patina Teal is
-"not a color" rather than "out of stock", because Copper Notes only comes in
-Brushed Copper, Desert Sand and Night Sky; and no price is typed into the code,
-with every price read from the catalog and stock read fresh from
-readInventory() on every call. Build them, run npm run check, and tell me how
-each of those three came out.
+Set up Module 2 of my CIS 591 project. Do these in order, and stop and tell me
+if a step fails:
+1. git clone --branch module-2-part-1 https://github.com/CIS-591/class-examples.git copper-m2
+2. Go into the copper-m2 folder
+3. npm run start-module   (makes copper-m2 on my own GitHub, public)
+4. npm ci
+5. npm run check — show me the output. It should say 12 of 27.
 ```
 
-**AC-M2.5 to AC-M2.10** should pass. Commit.
+Those 12 are Module 1's criteria. The 15 that fail are what the next prompt
+builds. `DEPLOY`, `AI-KEY` and `SUPABASE` show as "checked later" — the grader
+does those on your live site and in your repo.
 
-## Step 3: Copper's instructions
+**Restart Claude Code inside the new `copper-m2` folder** before the next step,
+so it picks up the project's rules and MCP servers.
 
-Paste this:
+## Step 2: Build Ask Copper
 
-```
-Read specs/module-2/spec.md section 2 and replace the TODO in
-lib/copper/assistant/instructions.ts with COPPER_INSTRUCTIONS: at least 40
-words of plain English covering every point the spec lists. Then show me the
-finished wording.
-```
-
-These instructions are the difference between a chatbot that checks and one
-that guesses, which is what Step 6 measures. Read the wording your agent
-produced before you move on, and tell it to change anything that doesn't sound
-like Copper.
-
-## Step 4: Let your agent build the streaming and the panel
-
-Paste this:
+One prompt builds all of it. Paste this and let it work:
 
 ```
-Read specs/module-2/spec.md sections 3, 4 and 5, plus lib/ai/call.ts,
-lib/ai/live.ts and lib/copper/assistant/progress.ts. Plan, then build:
-askCopper() in lib/copper/assistant/ask.ts, the panel in
-components/copper/ask-copper.tsx, and the tool card. Follow the spec exactly,
-and pay attention to these, which the tests check: every model call goes
-through callStream with { module: 2, feature: "ask-copper" } and
-providerOptions: THOUGHT_SUMMARIES; tools and instructions are sent only when
-Use tools is on, with stopWhen: stepCountIs(5), and with it off you send no
-instructions and no tools at all; each update is a fresh copy of everything so
-far; askCopper returns { progress } immediately and reads the stream in the
-background; a tool step appears at tool-input-start, before its input is
-known; tools on and tools off are separate conversations. Use a Server Action,
-no API route and no new page, and brand colours only. Run npm run check after
-each part. Two things the tests don't prove, so confirm them for me when you're
-done: with no API key set the panel shows the "Set up Google AI" card instead of
-crashing, and the three starter questions reappear under every answer, hidden
-only while a reply is streaming.
+Build Module 2 of this project, following specs/module-2/spec.md exactly. Work
+in this order, running npm run check after each part and committing when it
+improves:
+
+1. The four tools in lib/copper/assistant/tools.ts (spec section 1). The tests
+   check these: "Copper Home with Copper Plus, paid yearly, for 2 years" is
+   $149 + 2 x $79 = $307, counting Copper Plus once per household, not per
+   device; Copper Notes in Patina Teal is "not a color", not "out of stock";
+   no price is typed into the code — read every price from the catalog, and
+   read stock fresh from readInventory() on every call.
+2. COPPER_INSTRUCTIONS in lib/copper/assistant/instructions.ts (spec section
+   2): at least 40 words of plain English covering every point the spec lists.
+3. askCopper() in lib/copper/assistant/ask.ts and the panel in
+   components/copper/ask-copper.tsx with its tool card (spec sections 3, 4 and
+   5). Every model call goes through callStream with { module: 2, feature:
+   "ask-copper" } and providerOptions: THOUGHT_SUMMARIES. Tools and
+   instructions are sent only when Use tools is on, with stopWhen:
+   stepCountIs(5); with it off, send no instructions and no tools at all. Each
+   update is a fresh copy of everything so far. askCopper returns { progress }
+   immediately and reads the stream in the background. A tool step appears at
+   tool-input-start, before its input is known. Tools on and tools off are
+   separate conversations. Use a Server Action, no API route and no new page,
+   and brand colours only.
+
+Then run npm run check, npm test, npm run lint, npm run typecheck and npm run
+format, fix anything that fails without touching specs/*/tests, and tell me
+the final count. It should be 27 of 27. Commit and push.
 ```
 
-Commit when **all 15 Module 2 criteria** pass.
+Expect this to take a while and to ask you to approve edits. When it says 27 of
+27, part 1's 75 points are done.
 
-## Step 5: Try it for real
+## Step 3: Try it
 
-1. Add `GOOGLE_GENERATIVE_AI_API_KEY` to `.env.local` (see the README). It's the only key this module needs. Never commit this file.
-2. Start the app, saving the log so your agent can read it in Step 6:
+This is the part no agent can do for you: looking at the thing.
 
-```bash
-mkdir -p .grading && npm run dev 2>&1 | tee .grading/dev.log
-```
+1. Put your Google AI Studio key in `.env.local` as
+   `GOOGLE_GENERATIVE_AI_API_KEY=your-key-here`. Never commit this file.
+2. Run `npm run dev` and open http://localhost:3000, then click **Ask Copper**.
+3. Ask: _"How much is Copper Home with Copper Plus, paid yearly, for 2 years?"_
+   Watch the stations appear: the tools Copper can use, what it was thinking,
+   the tool it called with what it sent and what came back, then the answer.
+4. Flip **Use tools** off and ask the same question. Same model, same question,
+   nothing telling it to check — watch it invent a price.
 
-3. Open http://localhost:3000, click **Ask Copper**, and ask these three:
-   - "How much is Copper Home with Copper Plus, paid yearly, for 2 years?" — watch the four stations: the tools Copper can use, what it was thinking, the tool it called with what it sent and what came back, then the answer.
-   - "Is Copper Notes in Night Sky in stock?" — this one calls `check_availability`.
-   - "What colors does Copper Home come in?" — this one calls `get_products`, and never looks at stock.
+That contrast is the whole point of the module. Each answer's cost and time
+print in the terminal as a line starting `[ai_calls]`.
 
-Section 5 of the spec describes the panel exactly, and a TA compares yours with it. The four stations exist to make the agent loop visible: the tools on offer, the model's thinking, the round trip to your code, and the answer.
+## Step 4: Deploy
 
-Every question's cost and time are logged by `lib/ai/call.ts` as a line starting `[ai_calls]`, in the terminal and now also in `.grading/dev.log`.
-
-## Step 6: Write your report
-
-Open `specs/module-2/report.md`. Ask the five test questions with **Use tools on**, then the same five in the **tools-off** chat, and fill in the tables.
-
-Let your agent do the copying-out. Paste:
+Type `/mcp` in Claude Code and authorize **Vercel** (it's already listed in
+this project's `.mcp.json`). Then paste:
 
 ```
-Read .grading/dev.log and specs/module-2/report.md. Fill in the Cost and Time
-columns of the results table in the report from the [ai_calls] lines, in
-order, leaving every other column blank for me.
+Deploy this project to Vercel with the Vercel MCP tools, set
+GOOGLE_GENERATIVE_AI_API_KEY in the Vercel project from my .env.local without
+printing it, redeploy so it takes effect, and give me the production URL.
 ```
 
-The judgement is still yours: mark each answer right or wrong, read one tool card and one thought summary and write down what they say, change a stock level in `lib/copper/data/inventory.json` and watch the answer change without touching any code.
-
-The REPORT rubric in `spec.md` is what the TA uses. All of this costs well under a dollar, and Google's free tier may cover it entirely. This is the one part of the module that needs a real key: the 75 test points never call a model.
-
-## Step 7: Check your work and deploy
-
-```bash
-npm run check       # aim for 27 of 27
-npm test && npm run lint && npm run typecheck && npm run format
-git push
-```
-
-If anything fails, hand it over rather than hunting:
-
-```
-npm run check / npm test / npm run lint / npm run typecheck is failing. Here's
-the output. Find the cause and fix it without changing anything under specs/.
-```
-
-Then:
-
-1. Go to https://vercel.com/new and import your **`copper-m2`** repository.
-2. Under **Environment Variables**, add `GOOGLE_GENERATIVE_AI_API_KEY`. Click **Deploy**.
-3. Open your Vercel link and ask Copper a question.
-
-The grader looks for "Ask Copper" on your live site. It shows even without the key, but add it so your chatbot really works.
+Open the URL and ask Copper a question. The grader loads this page twice: once
+for the Ask Copper launcher (10 points) and once to check the setup card is
+*gone* (10 points), which only happens if the key reached Vercel.
 
 ---
 
 # Part 2: live stock
 
-Everything above is part 1, and it's worth all 75 test points. Part 2 is the
-second class session. Finish part 1 first, including your report, because
-Step 9 deletes the stock file your report writes about.
+Part 1 is worth all 75 test points and is finished. Part 2 is the second class
+session, and it's two prompts long.
 
 Right now today's stock lives in a file that ships inside your deployed code.
-That means a warehouse update needs a developer, a commit and a deploy. In
-this part you move stock into a **database** (Supabase), and change one
-function so Copper reads it. Nothing else about Copper changes, and no test
-changes, because the tests never look at where stock really comes from.
+A warehouse update needs a developer, a commit and a deploy. Here you move
+stock into a **database** (Supabase) and change one function so Copper reads
+it. Nothing else about Copper changes, and no test changes, because the tests
+never look at where stock really comes from.
 
 A **database** here is just a table on someone else's computer that your app
 can read over the internet, and that you can edit in a web page without
 touching code.
 
-Two steps of yours, and one prompt does the rest.
+## Step 5: Get the part 2 files and a Supabase project
 
-## Step 8: Get the part 2 files and a Supabase project
+Paste this:
 
-In your `copper-m2` folder, take this session's files — the migration, the seed
-and the Supabase client your agent uses in Step 9. Copy them in rather than
-merging the branch, so nothing you wrote in part 1 is touched:
-
-```bash
+```
+In this repo, take the part 2 files from the course remote without merging the
+branch, so nothing I wrote in part 1 is touched:
 git fetch course
-git checkout course/module-2-part-2 -- supabase lib/supabase \
-  specs/module-2/instructions.md specs/module-2/spec.md package.json package-lock.json
-git show course/module-2-part-2:specs/module-2/report.md | sed -n '/^# Part 2/,$p' >> specs/module-2/report.md
+git checkout course/module-2-part-2 -- supabase lib/supabase .mcp.json specs/module-2/instructions.md specs/module-2/spec.md package.json package-lock.json
 npm install
+Then show me what changed.
 ```
 
-The last line appends part 2's report questions under the answers you already
-wrote, instead of replacing the file.
+While it runs, go to [supabase.com](https://supabase.com) and sign up with
+your personal email, not your ASU one. Stop there — you don't need to create
+anything; Claude makes the project in the next step.
 
-Then create the database. Like your Google AI Studio key, it's free and needs
-no credit card.
+Then **restart Claude Code** (the pull replaced `.mcp.json`, and a running
+session won't see the new servers) and type `/mcp` to authorize **Supabase**.
+Its MCP server acts with *your* permissions and can create and change
+databases, so authorize your own personal organization, never one with real
+data in it.
 
-1. Go to [supabase.com](https://supabase.com), sign up, and create a new
-   project. Use your personal email, not your ASU one. Give the database
-   password to your password manager; you won't need it again.
-2. Wait for the project to finish setting up (a minute or two).
-3. In **Project Settings > General**, copy the **Reference ID**.
-
-## Step 9: Let Claude do the rest
-
-Instead of running database commands yourself, you connect Claude Code to
-Supabase with an **MCP server** — a standard way to give an agent tools it
-didn't ship with. Same idea as Copper's four tools, one level up: this time
-*your agent* is the one getting tools.
-
-Run this inside your `copper-m2` folder, with your own Reference ID:
-
-```bash
-claude mcp add --transport http supabase "https://mcp.supabase.com/mcp?project_ref=YOUR-REFERENCE-ID"
-```
-
-`?project_ref=` matters: it limits Claude to this one project. The MCP server
-acts with *your* permissions, so keep it pointed at a project you don't mind
-it changing.
-
-Start Claude Code with `claude`, type `/mcp`, and authorize Supabase in the
-browser window that opens — picking the organization that holds your project.
-Then paste:
+## Step 6: Let Claude move stock into it
 
 ```
-Using the Supabase MCP tools: apply supabase/migrations/20261029000000_inventory.sql
-to my project, run supabase/seed.sql, and show me the rows in the inventory
-table. Then look up the project URL and the publishable key and add them to
-.env.local as NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-without printing the file. Finally, read lib/copper/inventory.ts and
-lib/supabase/server.ts and rewrite readInventory() to read every row from the
-Supabase inventory table instead of the JSON file, keeping the same return
-type: InventoryRow[] when it works, null when it can't read. Delete
-lib/copper/data/inventory.json and run npm run check.
+Using the Supabase MCP tools, move stock out of the JSON file and into the
+database:
+1. Create a free Supabase project called copper-m2 if I don't have one
+   already, and wait until it's ready.
+2. Apply supabase/migrations/20261029000000_inventory.sql to it, run
+   supabase/seed.sql, and show me the rows in the inventory table.
+3. Look up the project URL and the publishable key, add them to .env.local as
+   NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY without
+   printing the file, and set the same two in Vercel with the Vercel MCP tools.
+4. Read lib/copper/inventory.ts and lib/supabase/server.ts, then rewrite
+   readInventory() to read every row from the Supabase inventory table instead
+   of the JSON file, keeping the same return type: InventoryRow[] when it
+   works, null when it can't read.
+5. Delete lib/copper/data/inventory.json, run npm run check, commit, push, and
+   redeploy to Vercel.
 ```
 
-You should see the same six rows that are in `inventory.json` today, and
 `npm run check` must still say **27 of 27**. The tests replace the whole
 inventory file with a fake, so moving stock to a database can't affect them.
 If a number moved, something else broke.
 
-Last, the deployed site needs the same two values:
+## Step 7: Prove it's live
 
-1. In Vercel, under **Project Settings > Environment Variables**, add
-   `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` next
-   to your Google key. Both are in `.env.local`; the publishable key is the
-   one that's safe to use in a browser, never the secret one.
-2. Commit, push, and let Vercel redeploy.
+The payoff, and it takes a minute:
 
-## Step 10: Prove it's live
-
-This is the part worth writing about:
-
-1. Open your **deployed** site and ask "Is Copper Notes in Night Sky in stock?"
+1. Open your **deployed** site and ask _"Is Copper Notes in Night Sky in
+   stock?"_
 2. In Supabase, open the **Table Editor**, find row `CN-NSK`, and change
    `units_in_stock` from 0 to 40. Save.
 3. Ask the live site the same question again.
 
 The answer changes. No commit, no deploy, no code. A shop manager could have
-done that. Write down both answers in your report.
+done that.
 
 ## What to submit
 
@@ -271,7 +199,7 @@ In Canvas:
 2. Your Vercel link
 3. A screenshot of `npm run check` showing **27 of 27** criteria passed
 
-Your report is graded from `specs/module-2/report.md` in your repo, so make sure it's committed and pushed.
+Everything else is graded from your repo and your live site, so make sure your last commit is pushed and Vercel has redeployed.
 
 ## How it's graded
 
@@ -280,14 +208,15 @@ Your report is graded from `specs/module-2/report.md` in your repo, so make sure
 | Part A: the chat widget (AC-M2.1 to AC-M2.4) | 20 | Tests |
 | Part B: the tools (AC-M2.5 to AC-M2.10) | 30 | Tests |
 | Part C: streaming (AC-M2.11 to AC-M2.15) | 25 | Tests (with a fake model and database, so they cost nothing) |
-| REPORT: tools on vs. off | 10 | A TA, using the REPORT rubric in `spec.md` |
-| DEPLOY: live on Vercel | 15 | The grader checks your live site |
+| DEPLOY: live on Vercel | 10 | The grader loads your site and looks for Ask Copper |
+| AI-KEY: the live site has a Google key | 10 | The grader checks your site shows the chat, not the setup card |
+| SUPABASE: stock comes from the database | 10 | The grader checks `readInventory()` reads Supabase and the JSON file is gone (part 2) |
 
 Your last commit before the deadline is graded. Tests are run with your instructor's copy, so changing them in your repo doesn't change your grade.
 
 ## Rules
 
-- **Don't edit** `specs/*/tests`, `specs/*/rubric.md`, `lib/copper/catalog.ts`, `lib/copper/inventory.ts` or `lib/copper/data/` — until Step 9, which rewrites `lib/copper/inventory.ts` and deletes the stock file on purpose.
+- **Don't edit** `specs/*/tests`, `specs/*/rubric.md`, `lib/copper/catalog.ts`, `lib/copper/inventory.ts` or `lib/copper/data/` — until Step 6, which rewrites `lib/copper/inventory.ts` and deletes the stock file on purpose.
 - **Never commit `.env.local` or paste keys into code.**
 - **Everything about Copper State Labs is fictional.** Don't use real company names, logos or products.
 
@@ -300,10 +229,11 @@ Your last commit before the deadline is graded. Tests are run with your instruct
 | Copper says nothing at all with tools off | You sent Copper's "always use your tools" instructions with no tools. With tools off, send no instructions at all |
 | No thinking station appears | `providerOptions: THOUGHT_SUMMARIES` is missing from your `callStream` call |
 | The answer appears all at once | You're waiting for the whole stream before sending an update. Send one on every change |
-| `.grading/dev.log` is empty or missing | You started the dev server without the `tee` command in Step 5. Stop it and start it again that way |
 | Copper says stock can't be checked (part 1) | `readInventory()` returned nothing. Check `lib/copper/data/inventory.json` is still valid JSON |
-| Copper says stock can't be checked (after Step 9) | The two `NEXT_PUBLIC_SUPABASE_*` variables are missing or wrong, or the project is paused. Check `.env.local`, restart `npm run dev`, and open the project in Supabase to wake it |
-| `/mcp` shows no Supabase tools | The `claude mcp add` command ran in a different folder, or you closed the browser before authorizing. Run it again inside `copper-m2`, then `/mcp` |
+| Copper says stock can't be checked (after Step 6) | The two `NEXT_PUBLIC_SUPABASE_*` variables are missing or wrong, or the project is paused. Check `.env.local`, restart `npm run dev`, and open the project in Supabase to wake it |
+| `/mcp` is empty, or a server is missing | Claude Code asks whether to trust a project's MCP servers the first time it sees them. If you said no, or never saw the prompt, restart `claude` inside `copper-m2` and accept |
+| `/mcp` shows no Vercel or Supabase after Step 5 | The pull replaced `.mcp.json` while Claude Code was running. Restart `claude`, then `/mcp` |
+| `/mcp` shows no Supabase tools | Claude Code was started outside your `copper-m2` folder, so it never read `.mcp.json`, or you closed the browser before authorizing. Restart `claude` inside `copper-m2`, then `/mcp` |
 | Claude says it can't see your tables | You authorized the wrong Supabase organization. In `/mcp`, disconnect Supabase and authorize again, choosing the organization that holds your project |
 | Stock works locally but not on Vercel | The two Supabase variables are only in `.env.local`. Add them in Project Settings > Environment Variables and redeploy |
 | Your Supabase project is "paused" | Free projects sleep after about a week unused. Open it in Supabase to wake it, and always wake it before a deadline |
