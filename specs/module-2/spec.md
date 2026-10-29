@@ -298,7 +298,7 @@ With tools off, put a bordered Sonoran Sunset box above the text:
 Same stations, which is what makes the comparison land, with three changes:
 
 - The rail is Sonoran Sunset instead of Copper and Teal.
-- Station 1 reads **TOOLS GIVEN TO COPPER: NONE**, the three names struck
+- Station 1 reads **TOOLS GIVEN TO COPPER: NONE**, the same four names struck
   through and muted, with the line "Copper has to answer from memory alone."
 - The thinking node is Sonoran Sunset too.
 
