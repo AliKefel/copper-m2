@@ -76,3 +76,48 @@ What could still go wrong with Ask Copper, even with tools? What do the tools pr
 What surprised you? What's one thing you'd change about Ask Copper next?
 
 >
+
+---
+
+# Part 2: live stock from a database
+
+Fill this in after Step 10. Everything above is part 1 and is graded on its own.
+
+## 7. The same question, before and after
+
+Ask your **deployed** site "Is Copper Notes in Night Sky in stock?", then change
+`CN-NSK` to 40 units in the Supabase table editor and ask again.
+
+| | Copper's answer |
+|---|---|
+| Before (0 units) | |
+| After (40 units) | |
+
+What did you have to do to make the live site change its answer? What did you
+*not* have to do? (2–3 sentences)
+
+>
+
+## 8. Who can change stock now
+
+In part 1, changing stock needed a developer, a commit and a deploy. Now it
+needs a Supabase login. Who at Copper State Labs should be allowed to edit that
+table, and what could go wrong if the wrong person can? (2–4 sentences)
+
+>
+
+## 9. What broke, or nearly did
+
+Something in part 2 usually goes sideways: the wrong organization authorized,
+variables set locally but not in Vercel, a paused project. What happened to you,
+how did you work out what was wrong, and what told you? (2–4 sentences)
+
+>
+
+## 10. MCP in your own words
+
+You gave Claude tools for Supabase, the same way you gave Copper tools for
+prices and stock. Explain the difference between the MCP server you connected
+and the connection your deployed app uses to read the table. (2–4 sentences)
+
+>
